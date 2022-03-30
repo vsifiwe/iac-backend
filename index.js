@@ -45,7 +45,19 @@ app.get("/events", (req, res) => {
 });
 
 app.get("/next", (req, res) => {
-	res.send({ next: new Date() });
+	res.send({ next: new Date().getTime() });
+});
+
+app.get("/switch/:type", (req, res) => {
+	const { type } = req.params;
+
+	if (type === "on") {
+		return res.send({ msg: "turning on the alarm" });
+	}
+	if (type === "off") {
+		return res.send({ msg: "turning off the alarm" });
+	}
+	res.send({ msg: "the type is wrong" });
 });
 
 app.get("/", (req, res) => {
