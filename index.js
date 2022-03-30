@@ -48,6 +48,10 @@ app.get("/next", (req, res) => {
 	res.send({ next: new Date() });
 });
 
+app.get("/", (req, res) => {
+	res.send("Hello World!");
+});
+
 app.listen(port, () => {
 	console.log(`Example app listening on port ${port}`);
 });
