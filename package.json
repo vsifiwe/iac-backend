@@ -1,0 +1,21 @@
+{
+	"name": "iac-backend",
+	"version": "1.0.0",
+	"description": "Intelligent alarm clock backend",
+	"main": "index.js",
+	"scripts": {
+		"start": "node index.js",
+		"dev": "nodemon index.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Manzi Asifiwe",
+	"license": "ISC",
+	"dependencies": {
+		"dotenv": "^16.0.0",
+		"express": "^4.17.3",
+		"googleapis": "39"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.15"
+	}
+}
