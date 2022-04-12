@@ -1,5 +1,6 @@
 const express = require("express");
 const { google } = require("googleapis");
+const { calculateRouteAndTimeTaken } = require('./helpers')
 
 const app = express();
 require("dotenv").config();
@@ -21,6 +22,8 @@ const auth = new google.auth.JWT(
 );
 
 app.get("/events", (req, res) => {
+	let {email} = req.query
+
 	let startDate = new Date();
 	let calc = new Date();
 	let endTime = calc.setDate(calc.getDate() + 5);
@@ -29,15 +32,16 @@ app.get("/events", (req, res) => {
 		calendar.events
 			.list({
 				auth: auth,
-				calendarId: calendarId,
+				calendarId: email,
 				timeMin: startDate,
 				timeMax: endDate,
 				timeZone: "Africa/Kigali",
 			})
 			.then((result) => {
 				let items = result["data"]["items"];
-				res.send({ events: items });
-			});
+				res.send({ events: items, message: "Success" });
+			})
+			.catch(err => res.send({message: "You have not shared your calendar with The App"}));
 	} catch (error) {
 		console.log(`Error in getEvents --> ${error}`);
 		res.send({ message: "An error occured", code: 500 });
@@ -47,6 +51,11 @@ app.get("/events", (req, res) => {
 app.get("/next", (req, res) => {
 	res.send({ next: new Date().getTime() });
 });
+
+app.get("/test", (req, res) => {
+	calculateRouteAndTimeTaken();
+	res.send({message: 'Done'})
+})
 
 app.get("/switch/:type", (req, res) => {
 	const { type } = req.params;
