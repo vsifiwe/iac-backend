@@ -1,6 +1,7 @@
 const express = require("express");
 const { google } = require("googleapis");
 const { calculateRouteAndTimeTaken } = require('./helpers')
+const { PrismaClient } = require('@prisma/client')
 
 const app = express();
 require("dotenv").config();
@@ -20,6 +21,22 @@ const auth = new google.auth.JWT(
 	CREDENTIALS.private_key,
 	SCOPES
 );
+
+const prisma = new PrismaClient()
+
+async function main() {
+	// await prisma.user.create({
+	// 	data: {
+	// 		'email': 'asifiwemanzi1@gmail.com',
+	// 		'location': 'KK 217 ST',
+	// 		'password': 'Pass@1234'
+	// 	}
+	// })
+
+
+	const allUsers = await prisma.user.findMany();
+	return allUsers
+  }
 
 app.get("/events", (req, res) => {
 	let {email} = req.query
@@ -53,8 +70,13 @@ app.get("/next", (req, res) => {
 });
 
 app.get("/test", (req, res) => {
-	calculateRouteAndTimeTaken();
-	res.send({message: 'Done'})
+	main().then(result => res.send({"data": result}))
+  .catch((e) => {
+    throw e
+  })
+  .finally(async () => {
+    await prisma.$disconnect()
+  })
 })
 
 app.get("/switch/:type", (req, res) => {
